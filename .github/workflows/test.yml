@@ -1,0 +1,34 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.10", "3.x"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Test Python CLI
+        run: python3 -W error::ResourceWarning -m unittest -v scripts/test_oura.py
+      - name: Compile Python CLI
+        run: python3 -m py_compile scripts/oura.py scripts/test_oura.py
+      - name: Validate shell scripts
+        run: |
+          sh -n install.sh
+          bash -n scripts/test_install.sh
+      - name: Test installer
+        run: scripts/test_install.sh

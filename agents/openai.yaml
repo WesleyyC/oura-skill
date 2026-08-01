@@ -1,0 +1,4 @@
+interface:
+  display_name: "Oura"
+  short_description: "Query personal Oura Ring health data"
+  default_prompt: "Use $oura to retrieve and analyze my recent Oura Ring data."
